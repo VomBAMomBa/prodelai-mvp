@@ -5,18 +5,18 @@ import {
 } from 'lucide-react'
 
 const menu = [
-  { to: '/', label: 'Главная страница', icon: Home },
-  { to: '/team', label: 'Команда', icon: Users },
-  { to: '/news', label: 'Новости', icon: Newspaper },
-  { to: '/projects', label: 'Проекты', icon: LayoutGrid },
-  { to: '/learning', label: 'Обучение', icon: GraduationCap },
-  { to: '/finance', label: 'Финансы', icon: BarChart2 },
-  { to: '/hr', label: 'HR процессы', icon: UserCog },
-  { to: '/knowledge', label: 'База знаний', icon: BookOpen },
-  { to: '/messenger', label: 'Мессенджер', icon: MessageSquare },
-  { to: '/calendar', label: 'Календарь', icon: CalendarDays },
-  { to: '/bot', label: 'ИИ-бот', icon: Bot },
-  { to: '/profile', label: 'Профиль', icon: User }
+  { to: '/app', label: 'Главная страница', icon: Home },
+  { to: '/app/team', label: 'Команда', icon: Users },
+  { to: '/app/news', label: 'Новости', icon: Newspaper },
+  { to: '/app/projects', label: 'Проекты', icon: LayoutGrid },
+  { to: '/app/learning', label: 'Обучение', icon: GraduationCap },
+  { to: '/app/finance', label: 'Финансы', icon: BarChart2 },
+  { to: '/app/hr', label: 'HR процессы', icon: UserCog },
+  { to: '/app/knowledge', label: 'База знаний', icon: BookOpen },
+  { to: '/app/messenger', label: 'Мессенджер', icon: MessageSquare },
+  { to: '/app/calendar', label: 'Календарь', icon: CalendarDays },
+  { to: '/app/bot', label: 'ИИ-бот', icon: Bot },
+  { to: '/app/profile', label: 'Профиль', icon: User }
 ]
 
 export default function Sidebar() {
@@ -31,7 +31,7 @@ export default function Sidebar() {
           <NavLink
             key={to}
             to={to}
-            end={to === '/'}
+            end={to === '/app'}
             className={({ isActive }) =>
               `flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors ${
                 isActive
