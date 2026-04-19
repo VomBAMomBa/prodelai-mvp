@@ -1,5 +1,5 @@
 import Header from '../components/Header.jsx'
-import { Home, FolderKanban, ListChecks, Users, CheckCircle2 } from 'lucide-react'
+import { Home, FolderOpen, CheckSquare, Users, Trophy } from 'lucide-react'
 import { useAppStore } from '../store/useAppStore.js'
 
 function MetricCard({ icon: Icon, label, value, tone }) {
@@ -19,21 +19,35 @@ function MetricCard({ icon: Icon, label, value, tone }) {
 export default function HomePage() {
   const projects = useAppStore((s) => s.projects)
 
+  const newsItems = [
+    {
+      id: 1,
+      title: 'Запуск бета-версии платформы',
+      date: '15.04.2026'
+    },
+    {
+      id: 2,
+      title: 'Партнёрство с РЭУ им. Плеханова',
+      date: '01.04.2026'
+    }
+  ]
+
   return (
     <div>
       <Header
         icon={Home}
+        badge="Главная страница"
         title="Добро пожаловать в ProДелай"
         subtitle="Управляйте проектами, задачами и командой в едином пространстве"
-        badges={['Активных проектов: 3', 'Задач сегодня: 7']}
+        badges={['Активных проектов: 3', 'Задач на сегодня: 7']}
       />
 
       <div className="px-8 py-6 space-y-6">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <MetricCard icon={FolderKanban} label="Всего проектов" value="3" tone="bg-indigo-500" />
-          <MetricCard icon={ListChecks} label="Активных задач" value="12" tone="bg-purple-500" />
-          <MetricCard icon={Users} label="Участников команды" value="5" tone="bg-pink-500" />
-          <MetricCard icon={CheckCircle2} label="Завершено задач" value="28" tone="bg-emerald-500" />
+          <MetricCard icon={FolderOpen} label="Всего проектов" value="3" tone="bg-purple-500" />
+          <MetricCard icon={CheckSquare} label="Активных задач" value="12" tone="bg-blue-500" />
+          <MetricCard icon={Users} label="Участников" value="5" tone="bg-green-500" />
+          <MetricCard icon={Trophy} label="Завершено" value="28" tone="bg-yellow-500" />
         </div>
 
         <div className="bg-white rounded-xl shadow-sm overflow-hidden">
@@ -78,6 +92,20 @@ export default function HomePage() {
               ))}
             </tbody>
           </table>
+        </div>
+
+        <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+          <div className="px-6 py-4 border-b border-gray-100">
+            <h2 className="font-semibold text-gray-800">Новости компании</h2>
+          </div>
+          <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+            {newsItems.map((item) => (
+              <div key={item.id} className="border border-gray-100 rounded-lg p-4 hover:shadow-md transition-shadow">
+                <h3 className="font-medium text-gray-800">{item.title}</h3>
+                <p className="text-sm text-gray-500 mt-2">{item.date}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>
