@@ -9,6 +9,7 @@ import TeamPage from './pages/TeamPage.jsx'
 import HRPage from './pages/HRPage.jsx'
 import AIBotPage from './pages/AIBotPage.jsx'
 import MessengerPage from './pages/MessengerPage.jsx'
+import FinancePage from './pages/FinancePage.jsx'
 
 export default function App() {
   return (
@@ -24,7 +25,7 @@ export default function App() {
       <Route path="/app/team" element={<Layout><TeamPage /></Layout>} />
       <Route path="/app/news" element={<Layout><div className="p-8"><h1 className="text-2xl font-bold">Новости</h1></div></Layout>} />
       <Route path="/app/learning" element={<Layout><div className="p-8"><h1 className="text-2xl font-bold">Обучение</h1></div></Layout>} />
-      <Route path="/app/finance" element={<Layout><div className="p-8"><h1 className="text-2xl font-bold">Финансы</h1></div></Layout>} />
+      <Route path="/app/finance" element={<Layout><FinancePage /></Layout>} />
       <Route path="/app/hr" element={<Layout><HRPage /></Layout>} />
       <Route path="/app/messenger" element={<Layout><MessengerPage /></Layout>} />
       <Route path="/app/bot" element={<Layout><AIBotPage /></Layout>} />
