@@ -1,5 +1,6 @@
 import { Routes, Route } from 'react-router-dom'
 import Layout from './components/Layout.jsx'
+import LandingPage from './pages/LandingPage.jsx'
 import HomePage from './pages/HomePage.jsx'
 import ProjectsPage from './pages/ProjectsPage.jsx'
 import KnowledgePage from './pages/KnowledgePage.jsx'
@@ -7,13 +8,12 @@ import CalendarPage from './pages/CalendarPage.jsx'
 
 export default function App() {
   return (
-    <Layout>
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/projects" element={<ProjectsPage />} />
-        <Route path="/knowledge" element={<KnowledgePage />} />
-        <Route path="/calendar" element={<CalendarPage />} />
-      </Routes>
-    </Layout>
+    <Routes>
+      <Route path="/" element={<LandingPage />} />
+      <Route path="/app" element={<Layout><HomePage /></Layout>} />
+      <Route path="/app/projects" element={<Layout><ProjectsPage /></Layout>} />
+      <Route path="/app/knowledge" element={<Layout><KnowledgePage /></Layout>} />
+      <Route path="/app/calendar" element={<Layout><CalendarPage /></Layout>} />
+    </Routes>
   )
 }
