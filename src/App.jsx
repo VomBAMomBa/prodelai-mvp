@@ -5,6 +5,7 @@ import HomePage from './pages/HomePage.jsx'
 import ProjectsPage from './pages/ProjectsPage.jsx'
 import KnowledgePage from './pages/KnowledgePage.jsx'
 import CalendarPage from './pages/CalendarPage.jsx'
+import TeamPage from './pages/TeamPage.jsx'
 
 export default function App() {
   return (
@@ -17,7 +18,7 @@ export default function App() {
       <Route path="/app/projects" element={<Layout><ProjectsPage /></Layout>} />
       <Route path="/app/knowledge" element={<Layout><KnowledgePage /></Layout>} />
       <Route path="/app/calendar" element={<Layout><CalendarPage /></Layout>} />
-      <Route path="/app/team" element={<Layout><div className="p-8"><h1 className="text-2xl font-bold">Команда</h1></div></Layout>} />
+      <Route path="/app/team" element={<Layout><TeamPage /></Layout>} />
       <Route path="/app/news" element={<Layout><div className="p-8"><h1 className="text-2xl font-bold">Новости</h1></div></Layout>} />
       <Route path="/app/learning" element={<Layout><div className="p-8"><h1 className="text-2xl font-bold">Обучение</h1></div></Layout>} />
       <Route path="/app/finance" element={<Layout><div className="p-8"><h1 className="text-2xl font-bold">Финансы</h1></div></Layout>} />
