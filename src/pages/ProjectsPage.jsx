@@ -677,6 +677,20 @@ function TemplatePreviewModal({ template, onClose }) {
   )
 }
 
+function StatusBadge({ status }) {
+  const styles = status === 'Завершён'
+    ? 'bg-emerald-100 text-emerald-700'
+    : status === 'На паузе'
+      ? 'bg-yellow-100 text-yellow-700'
+      : 'bg-blue-100 text-blue-700'
+
+  return (
+    <span className={`px-2.5 py-1 rounded-md text-xs font-medium whitespace-nowrap ${styles}`}>
+      {status}
+    </span>
+  )
+}
+
 function ProjectCard({ project, onClick }) {
   const getTasksByProject = useAppStore((s) => s.getTasksByProject)
   const tasks = getTasksByProject(project.id)
