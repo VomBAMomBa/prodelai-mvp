@@ -10,11 +10,11 @@ export const useAppStore = create((set) => ({
       {
         id: Date.now(),
         ...project,
-        status: 'В процессе',
-        progress: 0,
-        deadline: 'Не установлен',
-        members: 1,
-        color: 'from-indigo-500 to-purple-600'
+        status: project.status || 'В процессе',
+        progress: project.progress || 0,
+        deadline: project.deadline || 'Не установлен',
+        members: project.members || 1,
+        color: project.color || 'from-indigo-500 to-purple-600'
       }
     ]
   })),
