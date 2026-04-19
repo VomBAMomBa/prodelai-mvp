@@ -1,5 +1,5 @@
 import Header from '../components/Header.jsx'
-import { Home, FolderKanban, ListChecks, Users, CheckCircle2 } from 'lucide-react'
+import { Home, FolderKanban, ListChecks, Users, CheckCircle2, Newspaper } from 'lucide-react'
 import { useAppStore } from '../store/useAppStore.js'
 
 function MetricCard({ icon: Icon, label, value, tone }) {
@@ -25,15 +25,15 @@ export default function HomePage() {
         icon={Home}
         title="Добро пожаловать в ProДелай"
         subtitle="Управляйте проектами, задачами и командой в едином пространстве"
-        badges={['Активных проектов: 3', 'Задач сегодня: 7']}
+        badges={['Активных проектов: 3', 'Задач на сегодня: 7']}
       />
 
       <div className="px-8 py-6 space-y-6">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <MetricCard icon={FolderKanban} label="Всего проектов" value="3" tone="bg-indigo-500" />
-          <MetricCard icon={ListChecks} label="Активных задач" value="12" tone="bg-purple-500" />
-          <MetricCard icon={Users} label="Участников команды" value="5" tone="bg-pink-500" />
-          <MetricCard icon={CheckCircle2} label="Завершено задач" value="28" tone="bg-emerald-500" />
+          <MetricCard icon={ListChecks} label="Активных задач" value="12" tone="bg-blue-500" />
+          <MetricCard icon={Users} label="Участников" value="5" tone="bg-emerald-500" />
+          <MetricCard icon={CheckCircle2} label="Завершено" value="28" tone="bg-amber-500" />
         </div>
 
         <div className="bg-white rounded-xl shadow-sm overflow-hidden">
@@ -50,34 +50,69 @@ export default function HomePage() {
               </tr>
             </thead>
             <tbody>
-              {projects.map((p) => (
-                <tr key={p.id} className="border-t border-gray-100">
-                  <td className="px-6 py-4 text-gray-800 font-medium">{p.name}</td>
-                  <td className="px-6 py-4">
-                    <span className={`px-2 py-1 rounded-md text-xs font-medium ${
-                      p.status === 'Завершён'
-                        ? 'bg-emerald-100 text-emerald-700'
-                        : p.status === 'На паузе'
-                          ? 'bg-amber-100 text-amber-700'
-                          : 'bg-indigo-100 text-indigo-700'
-                    }`}>{p.status}</span>
-                  </td>
-                  <td className="px-6 py-4 min-w-[180px]">
-                    <div className="flex items-center gap-3">
-                      <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
-                        <div
-                          className="h-full bg-gradient-to-r from-indigo-500 to-purple-600"
-                          style={{ width: `${p.progress}%` }}
-                        />
-                      </div>
-                      <span className="text-xs text-gray-500 w-10 text-right">{p.progress}%</span>
+              <tr className="border-t border-gray-100">
+                <td className="px-6 py-4 text-gray-800 font-medium">Разработка платформы ProДелай</td>
+                <td className="px-6 py-4">
+                  <span className="px-2 py-1 rounded-md text-xs font-medium bg-indigo-100 text-indigo-700">В процессе</span>
+                </td>
+                <td className="px-6 py-4 min-w-[180px]">
+                  <div className="flex items-center gap-3">
+                    <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
+                      <div className="h-full bg-gradient-to-r from-indigo-500 to-purple-600" style={{ width: '65%' }} />
                     </div>
-                  </td>
-                  <td className="px-6 py-4 text-gray-600">{p.deadline}</td>
-                </tr>
-              ))}
+                    <span className="text-xs text-gray-500 w-10 text-right">65%</span>
+                  </div>
+                </td>
+                <td className="px-6 py-4 text-gray-600">01.06.2026</td>
+              </tr>
+              <tr className="border-t border-gray-100">
+                <td className="px-6 py-4 text-gray-800 font-medium">Маркетинговая кампания</td>
+                <td className="px-6 py-4">
+                  <span className="px-2 py-1 rounded-md text-xs font-medium bg-indigo-100 text-indigo-700">В процессе</span>
+                </td>
+                <td className="px-6 py-4 min-w-[180px]">
+                  <div className="flex items-center gap-3">
+                    <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
+                      <div className="h-full bg-gradient-to-r from-indigo-500 to-purple-600" style={{ width: '40%' }} />
+                    </div>
+                    <span className="text-xs text-gray-500 w-10 text-right">40%</span>
+                  </div>
+                </td>
+                <td className="px-6 py-4 text-gray-600">15.05.2026</td>
+              </tr>
+              <tr className="border-t border-gray-100">
+                <td className="px-6 py-4 text-gray-800 font-medium">Исследование рынка</td>
+                <td className="px-6 py-4">
+                  <span className="px-2 py-1 rounded-md text-xs font-medium bg-emerald-100 text-emerald-700">Завершён</span>
+                </td>
+                <td className="px-6 py-4 min-w-[180px]">
+                  <div className="flex items-center gap-3">
+                    <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
+                      <div className="h-full bg-gradient-to-r from-indigo-500 to-purple-600" style={{ width: '100%' }} />
+                    </div>
+                    <span className="text-xs text-gray-500 w-10 text-right">100%</span>
+                  </div>
+                </td>
+                <td className="px-6 py-4 text-gray-600">01.04.2026</td>
+              </tr>
             </tbody>
           </table>
+        </div>
+
+        <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+          <div className="px-6 py-4 border-b border-gray-100">
+            <h2 className="font-semibold text-gray-800">Новости компании</h2>
+          </div>
+          <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="p-4 bg-gray-50 rounded-lg">
+              <h3 className="font-medium text-gray-800 mb-1">Запуск бета-версии платформы</h3>
+              <p className="text-xs text-gray-500">15.04.2026</p>
+            </div>
+            <div className="p-4 bg-gray-50 rounded-lg">
+              <h3 className="font-medium text-gray-800 mb-1">Партнёрство с РЭУ им. Плеханова</h3>
+              <p className="text-xs text-gray-500">01.04.2026</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>

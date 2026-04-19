@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import Header from '../components/Header.jsx'
-import { LayoutGrid, Search, Plus, Users, Calendar, X, Upload, Link as LinkIcon } from 'lucide-react'
+import { LayoutGrid, Search, Plus, Users, Calendar, X, Upload, Link as LinkIcon, CheckSquare } from 'lucide-react'
 import { useAppStore } from '../store/useAppStore.js'
+import TaskDetailPage from './TaskDetailPage.jsx'
 
 function StatusBadge({ status }) {
   const map = {
@@ -16,9 +17,17 @@ function StatusBadge({ status }) {
   )
 }
 
-function ProjectCard({ project }) {
+function ProjectCard({ project, onClick }) {
+  const getTasksByProject = useAppStore((s) => s.getTasksByProject)
+  const tasks = getTasksByProject(project.id)
+  const doneTasks = tasks.filter(t => t.status === 'done').length
+  const totalTasks = tasks.length
+
   return (
-    <div className="bg-white rounded-xl shadow-sm overflow-hidden flex flex-col">
+    <div 
+      className="bg-white rounded-xl shadow-sm overflow-hidden flex flex-col cursor-pointer hover:shadow-md transition-shadow"
+      onClick={onClick}
+    >
       <div className={`h-24 bg-gradient-to-r ${project.color}`} />
       <div className="p-5 flex flex-col gap-3 flex-1">
         <div className="flex items-start justify-between gap-2">
@@ -39,6 +48,13 @@ function ProjectCard({ project }) {
             />
           </div>
         </div>
+
+        {totalTasks > 0 && (
+          <div className="flex items-center gap-2 text-xs text-gray-500 pt-1">
+            <CheckSquare size={14} />
+            <span>{doneTasks}/{totalTasks} задач выполнено</span>
+          </div>
+        )}
 
         <div className="flex items-center justify-between text-xs text-gray-500 pt-1 mt-auto">
           <div className="flex items-center gap-1.5">
@@ -134,6 +150,7 @@ export default function ProjectsPage() {
   const projects = useAppStore((s) => s.projects)
   const [query, setQuery] = useState('')
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [selectedProjectId, setSelectedProjectId] = useState(null)
 
   const filtered = projects.filter((p) =>
     p.name.toLowerCase().includes(query.toLowerCase())
@@ -173,11 +190,119 @@ export default function ProjectsPage() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
-          {filtered.map((p) => <ProjectCard key={p.id} project={p} />)}
+          {filtered.map((p) => (
+            <ProjectCard 
+              key={p.id} 
+              project={p} 
+              onClick={() => setSelectedProjectId(p.id)}
+            />
+          ))}
         </div>
       </div>
 
       {isModalOpen && <CreateProjectModal onClose={() => setIsModalOpen(false)} />}
+      
+      {selectedProjectId && (
+        <TaskDetailModal 
+          projectId={selectedProjectId} 
+          onClose={() => setSelectedProjectId(null)} 
+        />
+      )}
+    </div>
+  )
+}
+
+// Модальное окно для просмотра задач проекта
+function TaskDetailModal({ projectId, onClose }) {
+  const project = useAppStore((s) => s.projects.find(p => p.id === projectId))
+  const getTasksByProject = useAppStore((s) => s.getTasksByProject)
+  const tasks = getTasksByProject(projectId)
+  const [selectedTaskId, setSelectedTaskId] = useState(null)
+
+  if (!project) return null
+
+  const todoTasks = tasks.filter(t => t.status === 'todo')
+  const inProgressTasks = tasks.filter(t => t.status === 'in_progress')
+  const doneTasks = tasks.filter(t => t.status === 'done')
+
+  function TaskColumn({ title, tasks, color }) {
+    return (
+      <div className="flex-1 min-w-[280px]">
+        <div className={`flex items-center gap-2 mb-3 pb-2 border-b-2 ${color}`}>
+          <span className="font-medium text-gray-700">{title}</span>
+          <span className="text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full">{tasks.length}</span>
+        </div>
+        <div className="space-y-2">
+          {tasks.map((task) => (
+            <div
+              key={task.id}
+              onClick={() => setSelectedTaskId(task.id)}
+              className="bg-white p-3 rounded-lg border border-gray-100 shadow-sm cursor-pointer hover:shadow-md transition-shadow"
+            >
+              <div className="flex items-start justify-between gap-2 mb-2">
+                <h4 className="text-sm font-medium text-gray-800 line-clamp-2">{task.title}</h4>
+              </div>
+              {task.assignee && (
+                <div className="flex items-center gap-2 text-xs text-gray-500">
+                  <div className="w-5 h-5 rounded-full bg-indigo-500 flex items-center justify-center text-white text-xs">
+                    {task.assignee.split(' ').map(n => n[0]).join('').toUpperCase()}
+                  </div>
+                  <span>{task.assignee}</span>
+                </div>
+              )}
+              {task.dueDate && (
+                <div className="flex items-center gap-1 mt-2 text-xs text-gray-400">
+                  <Calendar size={12} />
+                  <span>{new Date(task.dueDate).toLocaleDateString('ru-RU')}</span>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-2xl shadow-xl w-full max-w-5xl h-[85vh] flex flex-col overflow-hidden">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 shrink-0">
+          <div>
+            <h2 className="text-lg font-semibold text-gray-800">{project.name}</h2>
+            <p className="text-sm text-gray-500">{project.description}</p>
+          </div>
+          <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
+            <X size={20} />
+          </button>
+        </div>
+        
+        <div className="flex-1 overflow-x-auto p-6">
+          <div className="flex gap-6 h-full">
+            <TaskColumn 
+              title="To Do" 
+              tasks={todoTasks} 
+              color="border-gray-300" 
+            />
+            <TaskColumn 
+              title="In Progress" 
+              tasks={inProgressTasks} 
+              color="border-blue-400" 
+            />
+            <TaskColumn 
+              title="Done" 
+              tasks={doneTasks} 
+              color="border-emerald-400" 
+            />
+          </div>
+        </div>
+      </div>
+
+      {selectedTaskId && (
+        <TaskDetailPage 
+          taskId={selectedTaskId} 
+          onClose={() => setSelectedTaskId(null)} 
+        />
+      )}
     </div>
   )
 }
