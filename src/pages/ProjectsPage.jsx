@@ -891,13 +891,19 @@ export default function ProjectsPage() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
-              {filtered.map((p) => (
-                <ProjectCard 
-                  key={p.id} 
-                  project={p} 
-                  onClick={() => setSelectedProjectId(p.id)}
-                />
-              ))}
+              {filtered.length === 0 ? (
+                <div className="col-span-full text-center py-12 text-gray-500">
+                  {query ? `Проекты по запросу "${query}" не найдены` : 'Пока нет проектов. Создайте первый проект!'}
+                </div>
+              ) : (
+                filtered.map((p) => (
+                  <ProjectCard 
+                    key={p.id} 
+                    project={p} 
+                    onClick={() => setSelectedProjectId(p.id)}
+                  />
+                ))
+              )}
             </div>
           </>
         ) : (
