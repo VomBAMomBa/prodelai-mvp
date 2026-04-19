@@ -1,8 +1,11 @@
 import { useState } from 'react'
 import Header from '../components/Header.jsx'
-import { LayoutGrid, Search, Plus, Users, Calendar, X, Upload, Link as LinkIcon, CheckSquare } from 'lucide-react'
+import { LayoutGrid, Search, Plus, Users, Calendar, X, Upload, Link as LinkIcon, CheckSquare, List, Kanban, Filter } from 'lucide-react'
 import { useAppStore } from '../store/useAppStore.js'
 import TaskDetailPage from './TaskDetailPage.jsx'
+import { DndContext, DragOverlay, useDraggable, useDroppable } from '@dnd-kit/core'
+import { SortableContext, verticalListSortingStrategy, arrayMove, useSortable } from '@dnd-kit/sortable'
+import { CSS } from '@dnd-kit/utilities'
 
 function StatusBadge({ status }) {
   const map = {
@@ -15,6 +18,54 @@ function StatusBadge({ status }) {
       {status}
     </span>
   )
+}
+
+function getPriorityColor(priority) {
+  switch (priority) {
+    case 'critical': return 'bg-red-500'
+    case 'high': return 'bg-orange-500'
+    case 'medium': return 'bg-yellow-500'
+    case 'low': return 'bg-green-500'
+    default: return 'bg-gray-400'
+  }
+}
+
+function getPriorityBorder(priority) {
+  switch (priority) {
+    case 'critical': return 'border-red-500'
+    case 'high': return 'border-orange-500'
+    case 'medium': return 'border-yellow-500'
+    case 'low': return 'border-green-500'
+    default: return 'border-gray-400'
+  }
+}
+
+function getInitials(name) {
+  if (!name) return ''
+  return name.split(' ').map(n => n[0]).join('').toUpperCase()
+}
+
+function getAvatarColor(name) {
+  const colors = [
+    'bg-indigo-500',
+    'bg-purple-500',
+    'bg-pink-500',
+    'bg-blue-500',
+    'bg-emerald-500'
+  ]
+  const index = name.length % colors.length
+  return colors[index]
+}
+
+function formatDate(dateString) {
+  if (!dateString) return null
+  const date = new Date(dateString)
+  return date.toLocaleDateString('ru-RU')
+}
+
+function isOverdue(dueDate) {
+  if (!dueDate) return false
+  return new Date(dueDate) < new Date()
 }
 
 function ProjectCard({ project, onClick }) {
