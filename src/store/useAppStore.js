@@ -33,6 +33,62 @@ export const useAppStore = create((set, get) => ({
     projects: state.projects.filter((p) => p.id !== id)
   })),
   
+  // Create project from template
+  createProjectFromTemplate: (template, projectName) => {
+    const projectId = generateId()
+    const now = new Date().toISOString()
+    
+    const newStages = template.stages.map((stage, index) => ({
+      id: generateId(),
+      name: stage.name,
+      order: index
+    }))
+    
+    const newTasks = []
+    template.stages.forEach((stage) => {
+      stage.tasks.forEach((taskTitle) => {
+        newTasks.push({
+          id: generateId(),
+          projectId,
+          parentId: null,
+          title: taskTitle,
+          description: '',
+          status: 'todo',
+          priority: 'medium',
+          assignee: null,
+          stage: stage.name,
+          dueDate: null,
+          createdAt: now,
+          checklist: [],
+          comments: [],
+          attachments: [],
+          tags: []
+        })
+      })
+    })
+    
+    set((state) => ({
+      projects: [
+        ...state.projects,
+        {
+          id: projectId,
+          name: projectName,
+          description: `Создано из шаблона: ${template.name}`,
+          status: 'В процессе',
+          progress: 0,
+          deadline: 'Не установлен',
+          members: 1,
+          color: 'from-indigo-500 to-purple-600',
+          stages: newStages,
+          createdAt: now
+        }
+      ],
+      tasks: [...state.tasks, ...newTasks]
+    }))
+    
+    return projectId
+  },
+  
   // Task actions
   addTask: (task) => set((state) => ({
     tasks: [...state.tasks, task]

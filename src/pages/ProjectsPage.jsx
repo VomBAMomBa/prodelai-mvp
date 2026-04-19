@@ -1,12 +1,13 @@
 import { useState, useMemo } from 'react'
 import Header from '../components/Header.jsx'
-import { LayoutGrid, Search, Plus, Users, Calendar, X, Upload, Link as LinkIcon, CheckSquare, List, Kanban, Filter, MessageSquare, Paperclip, ChevronDown } from 'lucide-react'
+import { LayoutGrid, Search, Plus, Users, Calendar, X, Upload, Link as LinkIcon, CheckSquare, List, Kanban, Filter, MessageSquare, Paperclip, ChevronDown, Rocket, GraduationCap, Megaphone, Code, FolderSearch } from 'lucide-react'
 import { useAppStore } from '../store/useAppStore.js'
 import TaskDetailPage from './TaskDetailPage.jsx'
 import { DndContext, DragOverlay, useDraggable, useDroppable } from '@dnd-kit/core'
 import { SortableContext, verticalListSortingStrategy, arrayMove, useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { PRIORITY_OPTIONS, STATUS_OPTIONS } from '../data/taskModel.js'
+import { templates, countTemplateTasks, countTemplateStages } from '../data/templates.js'
 
 // Helper functions
 function getInitials(name) {
@@ -509,6 +510,173 @@ function TaskListView({ projectId, onTaskClick }) {
   )
 }
 
+// Template Card Component
+function TemplateCard({ template, onSelect }) {
+  const iconMap = {
+    Rocket: Rocket,
+    GraduationCap: GraduationCap,
+    Megaphone: Megaphone,
+    Code: Code,
+    Calendar: Calendar,
+    Search: FolderSearch
+  }
+  
+  const IconComponent = iconMap[template.icon] || FolderSearch
+  
+  const colorMap = {
+    purple: 'bg-purple-100 text-purple-600',
+    blue: 'bg-blue-100 text-blue-600',
+    orange: 'bg-orange-100 text-orange-600',
+    green: 'bg-green-100 text-green-600',
+    pink: 'bg-pink-100 text-pink-600',
+    teal: 'bg-teal-100 text-teal-600'
+  }
+  
+  const categoryColorMap = {
+    'Стартап': 'bg-purple-50 text-purple-700 border-purple-200',
+    'Учёба': 'bg-blue-50 text-blue-700 border-blue-200',
+    'Маркетинг': 'bg-orange-50 text-orange-700 border-orange-200',
+    'Разработка': 'bg-green-50 text-green-700 border-green-200'
+  }
+  
+  const taskCount = countTemplateTasks(template)
+  const stageCount = countTemplateStages(template)
+  
+  return (
+    <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden hover:shadow-md transition-shadow flex flex-col">
+      <div className={`h-16 ${colorMap[template.color]} flex items-center justify-center`}>
+        <IconComponent size={32} />
+      </div>
+      <div className="p-5 flex flex-col gap-3 flex-1">
+        <div className="flex items-start justify-between gap-2">
+          <h3 className="font-semibold text-gray-800 line-clamp-2">{template.name}</h3>
+        </div>
+        <p className="text-sm text-gray-500 line-clamp-2">{template.description}</p>
+        
+        <span className={`inline-block px-2.5 py-1 rounded-md text-xs font-medium border ${categoryColorMap[template.category] || 'bg-gray-50 text-gray-700 border-gray-200'}`}>
+          {template.category}
+        </span>
+        
+        <div className="flex items-center gap-4 text-xs text-gray-500 pt-2 mt-auto">
+          <div className="flex items-center gap-1">
+            <CheckSquare size={14} />
+            <span>{taskCount} задач</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <List size={14} />
+            <span>{stageCount} этапов</span>
+          </div>
+        </div>
+        
+        <button
+          onClick={() => onSelect(template)}
+          className="w-full mt-3 px-4 py-2 bg-indigo-500 hover:bg-indigo-600 text-white text-sm font-medium rounded-lg transition-colors"
+        >
+          Использовать шаблон
+        </button>
+      </div>
+    </div>
+  )
+}
+
+// Templates Grid Component
+function TemplatesGrid({ onSelectTemplate }) {
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+      {templates.map((template) => (
+        <TemplateCard 
+          key={template.id} 
+          template={template} 
+          onSelect={onSelectTemplate}
+        />
+      ))}
+    </div>
+  )
+}
+
+// Template Preview Modal
+function TemplatePreviewModal({ template, onClose }) {
+  const createProjectFromTemplate = useAppStore((s) => s.createProjectFromTemplate)
+  const [projectName, setProjectName] = useState(template.name)
+  
+  const handleCreate = () => {
+    if (!projectName.trim()) return
+    const projectId = createProjectFromTemplate(template, projectName.trim())
+    onClose(projectId)
+  }
+  
+  return (
+    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-2xl shadow-xl w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 shrink-0">
+          <h2 className="text-lg font-semibold text-gray-800">Создание проекта из шаблона</h2>
+          <button onClick={() => onClose(null)} className="text-gray-400 hover:text-gray-600">
+            <X size={20} />
+          </button>
+        </div>
+        
+        <div className="flex-1 overflow-y-auto p-6 space-y-4">
+          {/* Template Info */}
+          <div className="bg-gray-50 rounded-lg p-4">
+            <h3 className="font-medium text-gray-800 mb-1">{template.name}</h3>
+            <p className="text-sm text-gray-500">{template.description}</p>
+          </div>
+          
+          {/* Project Name Input */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1.5">Название вашего проекта</label>
+            <input
+              type="text"
+              value={projectName}
+              onChange={(e) => setProjectName(e.target.value)}
+              className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
+              autoFocus
+            />
+          </div>
+          
+          {/* Stages and Tasks Preview */}
+          <div>
+            <h4 className="text-sm font-medium text-gray-700 mb-3">Этапы и задачи:</h4>
+            <div className="space-y-3">
+              {template.stages.map((stage, index) => (
+                <div key={index} className="border border-gray-200 rounded-lg overflow-hidden">
+                  <div className="bg-gray-50 px-4 py-2 border-b border-gray-200">
+                    <h5 className="text-sm font-medium text-gray-700">{stage.name}</h5>
+                  </div>
+                  <ul className="divide-y divide-gray-100">
+                    {stage.tasks.map((task, taskIndex) => (
+                      <li key={taskIndex} className="px-4 py-2 text-sm text-gray-600 flex items-center gap-2">
+                        <div className="w-1.5 h-1.5 rounded-full bg-gray-300" />
+                        {task}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+        
+        <div className="flex justify-end gap-2 px-6 py-4 border-t border-gray-100 shrink-0">
+          <button
+            type="button"
+            onClick={() => onClose(null)}
+            className="px-4 py-2 rounded-lg text-sm text-gray-600 hover:bg-gray-100"
+          >
+            Отмена
+          </button>
+          <button
+            onClick={handleCreate}
+            className="px-4 py-2 rounded-lg text-sm text-white bg-indigo-500 hover:bg-indigo-600"
+          >
+            Создать проект из шаблона
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 function ProjectCard({ project, onClick }) {
   const getTasksByProject = useAppStore((s) => s.getTasksByProject)
   const tasks = getTasksByProject(project.id)
@@ -642,7 +810,9 @@ export default function ProjectsPage() {
   const projects = useAppStore((s) => s.projects)
   const [query, setQuery] = useState('')
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [selectedTemplate, setSelectedTemplate] = useState(null)
   const [selectedProjectId, setSelectedProjectId] = useState(null)
+  const [activeTab, setActiveTab] = useState('my-projects') // 'my-projects' or 'templates'
 
   const filtered = projects.filter((p) =>
     p.name.toLowerCase().includes(query.toLowerCase())
@@ -651,6 +821,17 @@ export default function ProjectsPage() {
   const completion = Math.round(
     projects.reduce((acc, p) => acc + p.progress, 0) / (projects.length || 1)
   )
+
+  const handleTemplateSelect = (template) => {
+    setSelectedTemplate(template)
+  }
+
+  const handleTemplatePreviewClose = (projectId) => {
+    setSelectedTemplate(null)
+    if (projectId) {
+      setSelectedProjectId(projectId)
+    }
+  }
 
   return (
     <div>
@@ -662,39 +843,78 @@ export default function ProjectsPage() {
       />
 
       <div className="px-8 py-6 space-y-6">
-        <div className="flex items-center gap-3 flex-wrap">
-          <div className="relative flex-1 min-w-[240px]">
-            <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-            <input
-              type="text"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Поиск проектов..."
-              className="w-full pl-9 pr-3 py-2.5 rounded-lg border border-gray-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
-            />
-          </div>
+        {/* Main Tabs */}
+        <div className="flex items-center gap-2 border-b border-gray-200">
           <button
-            onClick={() => setIsModalOpen(true)}
-            className="flex items-center gap-2 bg-[#6366f1] hover:bg-[#4f46e5] text-white px-4 py-2.5 rounded-lg text-sm font-medium"
+            onClick={() => setActiveTab('my-projects')}
+            className={`flex items-center gap-2 px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
+              activeTab === 'my-projects' 
+                ? 'border-indigo-500 text-indigo-600' 
+                : 'border-transparent text-gray-500 hover:text-gray-700'
+            }`}
           >
-            <Plus size={16} /> Создать проект
+            <LayoutGrid size={16} />
+            Мои проекты
+          </button>
+          <button
+            onClick={() => setActiveTab('templates')}
+            className={`flex items-center gap-2 px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
+              activeTab === 'templates' 
+                ? 'border-indigo-500 text-indigo-600' 
+                : 'border-transparent text-gray-500 hover:text-gray-700'
+            }`}
+          >
+            <FolderSearch size={16} />
+            Шаблоны
           </button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
-          {filtered.map((p) => (
-            <ProjectCard 
-              key={p.id} 
-              project={p} 
-              onClick={() => setSelectedProjectId(p.id)}
-            />
-          ))}
-        </div>
+        {activeTab === 'my-projects' ? (
+          <>
+            <div className="flex items-center gap-3 flex-wrap">
+              <div className="relative flex-1 min-w-[240px]">
+                <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                <input
+                  type="text"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder="Поиск проектов..."
+                  className="w-full pl-9 pr-3 py-2.5 rounded-lg border border-gray-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                />
+              </div>
+              <button
+                onClick={() => setIsModalOpen(true)}
+                className="flex items-center gap-2 bg-[#6366f1] hover:bg-[#4f46e5] text-white px-4 py-2.5 rounded-lg text-sm font-medium"
+              >
+                <Plus size={16} /> Создать проект
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+              {filtered.map((p) => (
+                <ProjectCard 
+                  key={p.id} 
+                  project={p} 
+                  onClick={() => setSelectedProjectId(p.id)}
+                />
+              ))}
+            </div>
+          </>
+        ) : (
+          <TemplatesGrid onSelectTemplate={handleTemplateSelect} />
+        )}
       </div>
 
       {isModalOpen && <CreateProjectModal onClose={() => setIsModalOpen(false)} />}
       
-      {selectedProjectId && (
+      {selectedTemplate && (
+        <TemplatePreviewModal 
+          template={selectedTemplate} 
+          onClose={handleTemplatePreviewClose} 
+        />
+      )}
+      
+      {selectedProjectId && typeof selectedProjectId === 'string' && !selectedProjectId.startsWith('template-') && (
         <TaskDetailModal 
           projectId={selectedProjectId} 
           onClose={() => setSelectedProjectId(null)} 
