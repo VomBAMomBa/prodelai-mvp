@@ -6,6 +6,9 @@ import ProjectsPage from './pages/ProjectsPage.jsx'
 import KnowledgePage from './pages/KnowledgePage.jsx'
 import CalendarPage from './pages/CalendarPage.jsx'
 import TeamPage from './pages/TeamPage.jsx'
+import HRPage from './pages/HRPage.jsx'
+import AIBotPage from './pages/AIBotPage.jsx'
+import MessengerPage from './pages/MessengerPage.jsx'
 
 export default function App() {
   return (
@@ -22,9 +25,9 @@ export default function App() {
       <Route path="/app/news" element={<Layout><div className="p-8"><h1 className="text-2xl font-bold">Новости</h1></div></Layout>} />
       <Route path="/app/learning" element={<Layout><div className="p-8"><h1 className="text-2xl font-bold">Обучение</h1></div></Layout>} />
       <Route path="/app/finance" element={<Layout><div className="p-8"><h1 className="text-2xl font-bold">Финансы</h1></div></Layout>} />
-      <Route path="/app/hr" element={<Layout><div className="p-8"><h1 className="text-2xl font-bold">HR процессы</h1></div></Layout>} />
-      <Route path="/app/messenger" element={<Layout><div className="p-8"><h1 className="text-2xl font-bold">Мессенджер</h1></div></Layout>} />
-      <Route path="/app/bot" element={<Layout><div className="p-8"><h1 className="text-2xl font-bold">ИИ-бот</h1></div></Layout>} />
+      <Route path="/app/hr" element={<Layout><HRPage /></Layout>} />
+      <Route path="/app/messenger" element={<Layout><MessengerPage /></Layout>} />
+      <Route path="/app/bot" element={<Layout><AIBotPage /></Layout>} />
       <Route path="/app/profile" element={<Layout><div className="p-8"><h1 className="text-2xl font-bold">Профиль</h1></div></Layout>} />
     </Routes>
   )
