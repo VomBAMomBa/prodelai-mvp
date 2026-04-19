@@ -1,7 +1,7 @@
 // Моковые данные задач для платформы ProДелай
 
 export const tasks = [
-  // Проект 1: Разработка платформы ProДелай (id: 1)
+  // Проект 1: Разработка платформы ProДелай (id: '1')
   {
     id: 'task-001',
     projectId: '1',
@@ -132,8 +132,49 @@ export const tasks = [
     attachments: [],
     tags: ['qa', 'testing']
   },
+  {
+    id: 'task-007',
+    projectId: '1',
+    parentId: null,
+    title: 'Настроить CI/CD пайплайн',
+    description: 'Автоматизировать сборку, тестирование и деплой приложения через GitHub Actions.',
+    status: 'in_progress',
+    priority: 'medium',
+    assignee: 'Пономарев А.',
+    stage: 'DevOps',
+    dueDate: '2026-05-15',
+    createdAt: '2026-04-22',
+    checklist: [
+      { id: 'c1', text: 'Настроить linting', checked: true },
+      { id: 'c2', text: 'Настроить unit-тесты', checked: true },
+      { id: 'c3', text: 'Настроить сборку', checked: false },
+      { id: 'c4', text: 'Настроить деплой на staging', checked: false }
+    ],
+    comments: [
+      { id: 'cm1', author: 'Ставничук Я.', text: 'Важно добавить проверку типов TypeScript.', createdAt: '2026-04-23T11:00:00' }
+    ],
+    attachments: [],
+    tags: ['devops', 'ci-cd']
+  },
+  {
+    id: 'task-008',
+    projectId: '1',
+    parentId: 'task-007',
+    title: 'Настроить ESLint и Prettier',
+    description: 'Конфигурация линтеров для единого стиля кода в проекте.',
+    status: 'done',
+    priority: 'low',
+    assignee: 'Пономарев А.',
+    stage: 'DevOps',
+    dueDate: '2026-04-28',
+    createdAt: '2026-04-22',
+    checklist: [],
+    comments: [],
+    attachments: [],
+    tags: ['devops', 'linting']
+  },
   
-  // Проект 2: Маркетинговая кампания (id: 2)
+  // Проект 2: Маркетинговая кампания (id: '2')
   {
     id: 'task-010',
     projectId: '2',
@@ -215,7 +256,7 @@ export const tasks = [
     parentId: null,
     title: 'Ведение соцсетей проекта',
     description: 'Регулярный постинг контента в Telegram и VK о развитии платформы.',
-    status: 'in_progress',
+    status: 'todo',
     priority: 'low',
     assignee: null,
     stage: 'Продвижение',
@@ -261,7 +302,7 @@ export const tasks = [
     tags: ['event', 'webinar']
   },
   
-  // Проект 3: Исследование рынка (id: 3)
+  // Проект 3: Исследование рынка (id: '3')
   {
     id: 'task-020',
     projectId: '3',
@@ -295,7 +336,7 @@ export const tasks = [
     parentId: null,
     title: 'Опрос целевой аудитории',
     description: 'Провести глубинные интервью с 15 потенциальными пользователями для выявления потребностей.',
-    status: 'done',
+    status: 'in_progress',
     priority: 'high',
     assignee: 'Ставничук Я.',
     stage: 'Исследование',
@@ -304,8 +345,8 @@ export const tasks = [
     checklist: [
       { id: 'c1', text: 'Составить гайд интервью', checked: true },
       { id: 'c2', text: 'Найти респондентов', checked: true },
-      { id: 'c3', text: 'Провести интервью', checked: true },
-      { id: 'c4', text: 'Расшифровать записи', checked: true }
+      { id: 'c3', text: 'Провести интервью', checked: false },
+      { id: 'c4', text: 'Расшифровать записи', checked: false }
     ],
     comments: [],
     attachments: [],
@@ -317,7 +358,7 @@ export const tasks = [
     parentId: null,
     title: 'Сегментация рынка',
     description: 'Разделить рынок на сегменты по размеру компаний, отраслям и географии.',
-    status: 'done',
+    status: 'in_progress',
     priority: 'medium',
     assignee: 'Козлов А.',
     stage: 'Аналитика',
@@ -326,7 +367,7 @@ export const tasks = [
     checklist: [
       { id: 'c1', text: 'B2B сегмент', checked: true },
       { id: 'c2', text: 'B2C сегмент', checked: true },
-      { id: 'c3', text: 'Образовательный сектор', checked: true }
+      { id: 'c3', text: 'Образовательный сектор', checked: false }
     ],
     comments: [],
     attachments: [],
@@ -358,5 +399,26 @@ export const tasks = [
       { id: 'a1', name: 'market_research_final.pdf', url: '#', type: 'file' }
     ],
     tags: ['report', 'final']
+  },
+  {
+    id: 'task-024',
+    projectId: '3',
+    parentId: null,
+    title: 'Анализ ценовых стратегий конкурентов',
+    description: 'Изучить модели монетизации аналогичных продуктов и предложить оптимальную стратегию.',
+    status: 'todo',
+    priority: 'medium',
+    assignee: 'Иванов Д.',
+    stage: 'Аналитика',
+    dueDate: '2026-04-10',
+    createdAt: '2026-04-01',
+    checklist: [
+      { id: 'c1', text: 'Собрать данные о тарифах', checked: false },
+      { id: 'c2', text: 'Сравнить функционал по тарифам', checked: false },
+      { id: 'c3', text: 'Предложить свою модель', checked: false }
+    ],
+    comments: [],
+    attachments: [],
+    tags: ['pricing', 'analysis']
   }
 ]
